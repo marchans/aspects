@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd">
+
+<bean id="client" class="com.marchans.aspect.shop.Client"/>
+<bean id="cashier" class="com.marchans.aspect.shop.CashDesk"/>
+<bean id="vipcashier" class="com.marchans.aspect.shop.VipCashDesk"/>
+<bean id="vipclient" class="com.marchans.aspect.shop.VipClient"/>
+
+<aop:config>
+<aop:aspect ref="client">
+<aop:pointcut 
+expression="execution(* com.marchans.aspect.shop.Shop.getNewClient(..))" 
+id="shopping"/>
+<aop:around 
+method="shopGoods"
+pointcut-ref="shopping"/>
+</aop:aspect>
+</aop:config>
+
+<aop:config>
+<aop:aspect ref="vipcashier">
+<aop:pointcut 
+expression="execution(* com.marchans.aspect.shop.VipClient.giveDiscount( int)) 
+and args(discount)" 
+id="givingdiscount"/>
+<aop:before 
+method="askTheDiscount"
+pointcut-ref="givingdiscount"
+arg-names="discount"/>
+</aop:aspect>
+</aop:config>
+
+
+</beans>
